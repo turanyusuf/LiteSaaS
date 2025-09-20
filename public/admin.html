@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Mini SaaS Platform</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-shield-alt"></i>
+                <span>Admin Panel</span>
+            </div>
+            <div class="nav-menu">
+                <a href="/" class="nav-link">Ana Sayfa</a>
+                <a href="/dashboard" class="nav-link">Dashboard</a>
+                <div class="nav-auth">
+                    <span class="user-info" id="admin-user-info">Yükleniyor...</span>
+                    <button class="btn btn-outline" onclick="logout()">Çıkış</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Content -->
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="sidebar-menu">
+                <a href="#dashboard" class="sidebar-item active" data-section="dashboard">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#users" class="sidebar-item" data-section="users">
+                    <i class="fas fa-users"></i>
+                    <span>Kullanıcılar</span>
+                </a>
+                <a href="#packages" class="sidebar-item" data-section="packages">
+                    <i class="fas fa-box"></i>
+                    <span>Paketler</span>
+                </a>
+                <a href="#payments" class="sidebar-item" data-section="payments">
+                    <i class="fas fa-credit-card"></i>
+                    <span>Ödemeler</span>
+                </a>
+                <a href="#notifications" class="sidebar-item" data-section="notifications">
+                    <i class="fas fa-bell"></i>
+                    <span>Bildirimler</span>
+                </a>
+                <a href="#analytics" class="sidebar-item" data-section="analytics">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Analitikler</span>
+                </a>
+                <a href="#settings" class="sidebar-item" data-section="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Ayarlar</span>
+                </a>
+                <a href="#logs" class="sidebar-item" data-section="logs">
+                    <i class="fas fa-list"></i>
+                    <span>Sistem Logları</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Dashboard Section -->
+            <section id="dashboard-section" class="admin-section active">
+                <div class="section-header">
+                    <h1>Admin Dashboard</h1>
+                    <p>Sistem genel durumu</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="total-users">0</h3>
+                            <p>Toplam Kullanıcı</p>
+                            <span class="stat-change" id="new-users-today">+0 bugün</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="total-revenue">₺0</h3>
+                            <p>Toplam Gelir</p>
+                            <span class="stat-change" id="today-revenue">₺0 bugün</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="total-packages">0</h3>
+                            <p>Aktif Paket</p>
+                            <span class="stat-change" id="total-deliveries">0 teslim</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3 id="pending-payments">0</h3>
+                            <p>Bekleyen Ödeme</p>
+                            <span class="stat-change" id="pending-deliveries">0 teslim</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h3>Son Aktiviteler</h3>
+                        <div id="recent-activities" class="activity-list">
+                            <!-- Activities will be loaded here -->
+                        </div>
+                    </div>
+                    <div class="dashboard-card">
+                        <h3>Son Ödemeler</h3>
+                        <div id="recent-payments" class="payment-list">
+                            <!-- Payments will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Users Section -->
+            <section id="users-section" class="admin-section">
+                <div class="section-header">
+                    <h1>Kullanıcı Yönetimi</h1>
+                    <div class="section-actions">
+                        <div class="search-box">
+                            <input type="text" id="user-search" placeholder="Kullanıcı ara...">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <select id="user-status-filter">
+                            <option value="">Tüm Durumlar</option>
+                            <option value="active">Aktif</option>
+                            <option value="inactive">Pasif</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Kullanıcı</th>
+                                <th>E-posta</th>
+                                <th>Durum</th>
+                                <th>Kayıt Tarihi</th>
+                                <th>Son Giriş</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body">
+                            <!-- Users will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination" id="users-pagination">
+                    <!-- Pagination will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Packages Section -->
+            <section id="packages-section" class="admin-section">
+                <div class="section-header">
+                    <h1>Paket Yönetimi</h1>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="showCreatePackageModal()">
+                            <i class="fas fa-plus"></i>
+                            Yeni Paket
+                        </button>
+                    </div>
+                </div>
+
+                <div class="packages-grid" id="admin-packages-grid">
+                    <!-- Packages will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Payments Section -->
+            <section id="payments-section" class="admin-section">
+                <div class="section-header">
+                    <h1>Ödeme Yönetimi</h1>
+                    <div class="section-actions">
+                        <div class="search-box">
+                            <input type="text" id="payment-search" placeholder="Ödeme ara...">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <select id="payment-status-filter">
+                            <option value="">Tüm Durumlar</option>
+                            <option value="pending">Bekleyen</option>
+                            <option value="completed">Tamamlanan</option>
+                            <option value="failed">Başarısız</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Kullanıcı</th>
+                                <th>Paket</th>
+                                <th>Tutar</th>
+                                <th>Durum</th>
+                                <th>Tarih</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="payments-table-body">
+                            <!-- Payments will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination" id="payments-pagination">
+                    <!-- Pagination will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Notifications Section -->
+            <section id="notifications-section" class="admin-section">
+                <div class="section-header">
+                    <h1>Bildirim Yönetimi</h1>
+                    <div class="section-actions">
+                        <button class="btn btn-primary" onclick="showSendNotificationModal()">
+                            <i class="fas fa-paper-plane"></i>
+                            Bildirim Gönder
+                        </button>
+                    </div>
+                </div>
+
+                <div class="notifications-container" id="admin-notifications-container">
+                    <!-- Notifications will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Analytics Section -->
+            <section id="analytics-section" class="admin-section">
+                <div class="section-header">
+                    <h1>Analitikler</h1>
+                    <div class="section-actions">
+                        <select id="analytics-period">
+                            <option value="7">Son 7 Gün</option>
+                            <option value="30" selected>Son 30 Gün</option>
+                            <option value="90">Son 90 Gün</option>
+                        </select>
+                        <button class="btn btn-outline" onclick="exportAnalytics()">
+                            <i class="fas fa-download"></i>
+                            Export
+                        </button>
+                    </div>
+                </div>
+
+                <div class="analytics-grid">
+                    <div class="analytics-card">
+                        <h3>Kullanıcı Analitikleri</h3>
+                        <div id="user-analytics" class="analytics-content">
+                            <!-- User analytics will be loaded here -->
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Ödeme Analitikleri</h3>
+                        <div id="payment-analytics" class="analytics-content">
+                            <!-- Payment analytics will be loaded here -->
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Paket Analitikleri</h3>
+                        <div id="package-analytics" class="analytics-content">
+                            <!-- Package analytics will be loaded here -->
+                        </div>
+                    </div>
+                    <div class="analytics-card">
+                        <h3>Aktivite Analitikleri</h3>
+                        <div id="activity-analytics" class="analytics-content">
+                            <!-- Activity analytics will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section id="settings-section" class="admin-section">
+                <div class="section-header">
+                    <h1>Sistem Ayarları</h1>
+                    <p>Genel sistem konfigürasyonu</p>
+                </div>
+
+                <div class="settings-container">
+                    <form id="settings-form">
+                        <div class="settings-grid" id="settings-grid">
+                            <!-- Settings will be loaded here -->
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i>
+                            Ayarları Kaydet
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Logs Section -->
+            <section id="logs-section" class="admin-section">
+                <div class="section-header">
+                    <h1>Sistem Logları</h1>
+                    <div class="section-actions">
+                        <select id="log-type-filter">
+                            <option value="">Tüm Tipler</option>
+                            <option value="login">Giriş</option>
+                            <option value="register">Kayıt</option>
+                            <option value="payment">Ödeme</option>
+                            <option value="pdf_generated">PDF Oluşturma</option>
+                        </select>
+                        <input type="text" id="log-user-filter" placeholder="Kullanıcı ID">
+                    </div>
+                </div>
+
+                <div class="logs-container" id="logs-container">
+                    <!-- Logs will be loaded here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Create Package Modal -->
+    <div id="create-package-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Yeni Paket Oluştur</h3>
+                <button class="modal-close" onclick="closeModal('create-package-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="create-package-form">
+                <div class="form-group">
+                    <label for="package-name">Paket Adı</label>
+                    <input type="text" id="package-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="package-description">Açıklama</label>
+                    <textarea id="package-description" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="package-price">Fiyat (₺)</label>
+                    <input type="number" id="package-price" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label>Sorular</label>
+                    <div id="questions-container">
+                        <!-- Questions will be added dynamically -->
+                    </div>
+                    <button type="button" class="btn btn-outline" onclick="addQuestion()">
+                        <i class="fas fa-plus"></i>
+                        Soru Ekle
+                    </button>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">
+                    <i class="fas fa-save"></i>
+                    Paketi Oluştur
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Send Notification Modal -->
+    <div id="send-notification-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Bildirim Gönder</h3>
+                <button class="modal-close" onclick="closeModal('send-notification-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="send-notification-form">
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="is-global-notification">
+                        Tüm kullanıcılara gönder
+                    </label>
+                </div>
+                <div class="form-group" id="user-selection-group">
+                    <label for="notification-user">Kullanıcı Seç</label>
+                    <select id="notification-user">
+                        <!-- Users will be loaded here -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="notification-title">Başlık</label>
+                    <input type="text" id="notification-title" required>
+                </div>
+                <div class="form-group">
+                    <label for="notification-message">Mesaj</label>
+                    <textarea id="notification-message" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="notification-type">Tip</label>
+                    <select id="notification-type" required>
+                        <option value="info">Bilgi</option>
+                        <option value="success">Başarı</option>
+                        <option value="warning">Uyarı</option>
+                        <option value="error">Hata</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">
+                    <i class="fas fa-paper-plane"></i>
+                    Bildirim Gönder
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/app.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
+
